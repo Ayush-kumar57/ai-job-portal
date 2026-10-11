@@ -1,0 +1,14 @@
+# Virtual environment (requirements.txt se dobara banta hai)
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Upload hue resumes (personal data) - sirf folder rakhenge
+uploads/resumes/*
+!uploads/resumes/.gitkeep
+
+# Logs / editor
+*.log
+.vscode/
