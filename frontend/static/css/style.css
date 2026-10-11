@@ -1,1 +1,107 @@
 /* Apni custom styling yahan likhenge (Bootstrap ke upar) */
+
+:root {
+  --brand-1: #4f46e5;   /* indigo */
+  --brand-2: #7c3aed;   /* violet */
+  --accent:  #fbbf24;   /* amber */
+}
+
+body {
+  font-family: 'Poppins', system-ui, sans-serif;
+  background: #f6f7fb;
+}
+
+/* ---------- Navbar ---------- */
+.app-navbar {
+  background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+  box-shadow: 0 4px 18px rgba(79, 70, 229, 0.25);
+  padding: 0.7rem 0;
+}
+
+.app-navbar .navbar-brand {
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: 0.2px;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-accent { color: var(--accent); }
+
+.app-navbar .nav-link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.45rem 0.85rem !important;
+  transition: background 0.2s, color 0.2s;
+}
+
+.app-navbar .nav-link:hover,
+.app-navbar .nav-link.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* User ka naam + avatar */
+.user-chip {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50px;
+  padding: 4px 14px 4px 4px;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #3b2a00;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-name {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.role-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.role-seeker::before    { content: "● "; color: #34d399; }
+.role-recruiter::before { content: "● "; color: #60a5fa; }
+.role-admin::before     { content: "● "; color: #f87171; }
+
+/* Navbar buttons */
+.btn-nav-light {
+  background: #fff;
+  color: var(--brand-1);
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 0.45rem 1.1rem;
+}
+.btn-nav-light:hover { background: var(--accent); color: #3b2a00; }
+
+.btn-nav-outline {
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 50px;
+  padding: 0.4rem 1rem;
+}
+.btn-nav-outline:hover { background: #fff; color: var(--brand-1); }
