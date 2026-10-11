@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Forgot password{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-5">
+<h2 class="mb-3">Forgot password?</h2>
+<p>Password reset is coming soon. For now, please contact the admin.</p>
+<a href="{{ url_for('auth.login') }}">Back to login</a>
+</div></div>
+{% endblock %}

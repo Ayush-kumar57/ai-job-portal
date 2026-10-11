@@ -10,3 +10,6 @@ recruiters = db['recruiters']
 jobs = db['jobs']
 resumes = db['resumes']
 applications = db['applications']
+
+# Ek email se sirf ek account (technical doc ka rule)
+users.create_index('email', unique=True)

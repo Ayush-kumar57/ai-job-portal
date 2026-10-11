@@ -2,6 +2,10 @@ import os
 from flask import Flask, render_template
 import config
 from db import db
+from auth.routes import auth_bp
+from seeker.routes import seeker_bp
+from recruiter.routes import recruiter_bp
+from admin.routes import admin_bp
 
 # HTML aur CSS frontend/ folder mein hain, isliye Flask ko unka rasta batate hain
 FRONTEND_DIR = os.path.join(config.BASE_DIR, 'frontend')
@@ -10,6 +14,12 @@ app = Flask(__name__,
             template_folder=os.path.join(FRONTEND_DIR, 'templates'),
             static_folder=os.path.join(FRONTEND_DIR, 'static'))
 app.config.from_object(config)
+
+# Har role ke routes alag file (blueprint) mein hain, yahan sabko jodte hain
+app.register_blueprint(auth_bp)
+app.register_blueprint(seeker_bp)
+app.register_blueprint(recruiter_bp)
+app.register_blueprint(admin_bp)
 
 
 @app.route('/')

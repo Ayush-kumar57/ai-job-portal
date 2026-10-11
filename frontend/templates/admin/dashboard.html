@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-1">Welcome, {{ session.name }}</h2>
+<p class="text-muted mb-4">Admin dashboard</p>
+<div class="row g-3">
+  <div class="col-md"><div class="card h-100"><div class="card-body">
+    <h5 class="card-title">Users</h5>
+    <p class="card-text text-muted">Manage all users</p>
+    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+  </div></div></div>
+  <div class="col-md"><div class="card h-100"><div class="card-body">
+    <h5 class="card-title">Recruiters</h5>
+    <p class="card-text text-muted">Manage recruiters</p>
+    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+  </div></div></div>
+  <div class="col-md"><div class="card h-100"><div class="card-body">
+    <h5 class="card-title">Jobs</h5>
+    <p class="card-text text-muted">Manage all jobs</p>
+    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+  </div></div></div>
+  <div class="col-md"><div class="card h-100"><div class="card-body">
+    <h5 class="card-title">Applications</h5>
+    <p class="card-text text-muted">Manage all applications</p>
+    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+  </div></div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,200 @@
+python
+java
+c
+c++
+c#
+javascript
+typescript
+php
+ruby
+go
+golang
+rust
+kotlin
+swift
+scala
+r
+matlab
+perl
+dart
+bash
+shell scripting
+powershell
+html
+css
+sass
+bootstrap
+tailwind
+jquery
+react
+react native
+angular
+vue
+next.js
+node.js
+express
+django
+flask
+fastapi
+spring
+spring boot
+hibernate
+laravel
+asp.net
+.net
+flutter
+android
+ios
+redux
+graphql
+rest api
+api
+json
+xml
+ajax
+web development
+frontend
+backend
+full stack
+responsive design
+sql
+mysql
+postgresql
+sqlite
+oracle
+sql server
+mongodb
+redis
+cassandra
+firebase
+elasticsearch
+dynamodb
+nosql
+database design
+pl/sql
+machine learning
+deep learning
+artificial intelligence
+nlp
+natural language processing
+computer vision
+data science
+data analysis
+data analytics
+data visualization
+data mining
+data engineering
+big data
+statistics
+pandas
+numpy
+scipy
+matplotlib
+seaborn
+plotly
+scikit-learn
+tensorflow
+keras
+pytorch
+opencv
+nltk
+spacy
+hugging face
+transformers
+llm
+generative ai
+prompt engineering
+neural networks
+regression
+classification
+clustering
+feature engineering
+time series
+power bi
+tableau
+excel
+advanced excel
+google analytics
+hadoop
+spark
+pyspark
+kafka
+airflow
+etl
+data warehousing
+aws
+azure
+gcp
+google cloud
+docker
+kubernetes
+jenkins
+terraform
+ansible
+ci/cd
+devops
+linux
+unix
+git
+github
+gitlab
+bitbucket
+jira
+nginx
+apache
+microservices
+cloud computing
+serverless
+cybersecurity
+network security
+penetration testing
+ethical hacking
+networking
+tcp/ip
+selenium
+cypress
+jest
+pytest
+junit
+unit testing
+manual testing
+automation testing
+postman
+figma
+adobe xd
+photoshop
+illustrator
+ui/ux
+ui design
+ux design
+wordpress
+seo
+digital marketing
+oop
+data structures
+algorithms
+dsa
+system design
+design patterns
+agile
+scrum
+kanban
+project management
+sdlc
+blockchain
+solidity
+iot
+embedded systems
+arduino
+raspberry pi
+autocad
+sap
+salesforce
+communication
+teamwork
+leadership
+problem solving
+critical thinking
+time management
+presentation
+english

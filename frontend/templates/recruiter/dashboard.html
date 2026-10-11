@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-1">Welcome, {{ session.name }}</h2>
+<p class="text-muted mb-4">Recruiter dashboard</p>
+<div class="row g-3">
+  <div class="col-md"><div class="card h-100"><div class="card-body">
+    <h5 class="card-title">Post a Job</h5>
+    <p class="card-text text-muted">Create a new job opening</p>
+    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+  </div></div></div>
+  <div class="col-md"><div class="card h-100"><div class="card-body">
+    <h5 class="card-title">My Jobs</h5>
+    <p class="card-text text-muted">Edit or close your jobs</p>
+    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+  </div></div></div>
+  <div class="col-md"><div class="card h-100"><div class="card-body">
+    <h5 class="card-title">Company Profile</h5>
+    <p class="card-text text-muted">Tell candidates about your company</p>
+    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+  </div></div></div>
+</div>
+{% endblock %}
