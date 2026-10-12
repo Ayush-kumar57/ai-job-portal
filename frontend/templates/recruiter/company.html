@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Company Profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-8">
+<div class="page-card">
+  <h2 class="page-title"><i class="bi bi-building me-2"></i>Company Profile</h2>
+  <p class="text-muted">This information is shown to candidates with every job you post.</p>
+  <form method="post">
+    <div class="row">
+      <div class="col-md-6 mb-3"><label class="form-label">Company name</label>
+        <input class="form-control" name="company_name" value="{{ p.company_name or '' }}" placeholder="TechNova Pvt Ltd" required></div>
+      <div class="col-md-6 mb-3"><label class="form-label">Website</label>
+        <input class="form-control" name="company_website" value="{{ p.company_website or '' }}" placeholder="technova.in"></div>
+    </div>
+    <div class="mb-3"><label class="form-label">About</label>
+      <textarea class="form-control" name="about" rows="4" placeholder="What does your company do?">{{ p.about or '' }}</textarea></div>
+    <div class="mb-3"><label class="form-label">Location</label>
+      <input class="form-control" name="location" value="{{ p.location or '' }}" placeholder="Knowledge Park, Greater Noida"></div>
+    <button class="btn btn-primary px-4"><i class="bi bi-check2-circle me-1"></i> Save</button>
+  </form>
+</div>
+</div></div>
+{% endblock %}

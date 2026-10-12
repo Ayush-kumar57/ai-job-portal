@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Post a Job' if mode == 'new' else 'Edit Job' }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-9">
+<div class="page-card">
+  <h2 class="page-title">
+    <i class="bi {{ 'bi-plus-circle' if mode == 'new' else 'bi-pencil-square' }} me-2"></i>
+    {{ 'Post a Job' if mode == 'new' else 'Edit Job' }}
+  </h2>
+  <form method="post">
+    <div class="mb-3"><label class="form-label">Title</label>
+      <input class="form-control" name="title" value="{{ job.title or '' }}" placeholder="Python Developer" required></div>
+    <div class="mb-3"><label class="form-label">Description</label>
+      <textarea class="form-control" name="description" rows="8" required
+        placeholder="Describe the role, responsibilities and what you are looking for. The AI compares resumes with this text.">{{ job.description or '' }}</textarea></div>
+    <div class="mb-3"><label class="form-label">Required skills <span class="text-muted small">(comma separated)</span></label>
+      <input class="form-control" name="required_skills" value="{{ job.required_skills|join(', ') if job.required_skills else '' }}" placeholder="python, flask, mongodb"></div>
+    <div class="row">
+      <div class="col-md mb-3"><label class="form-label">Location</label>
+        <input class="form-control" name="location" value="{{ job.location or '' }}" placeholder="Greater Noida"></div>
+      <div class="col-md mb-3"><label class="form-label">Job type</label>
+        <select class="form-select" name="job_type">
+          {% for t in ['Full-time', 'Internship', 'Part-time'] %}
+          <option {{ 'selected' if job.job_type == t }}>{{ t }}</option>{% endfor %}
+        </select></div>
+      <div class="col-md mb-3"><label class="form-label">Salary range</label>
+        <input class="form-control" name="salary_range" value="{{ job.salary_range or '' }}" placeholder="4 to 6 LPA"></div>
+    </div>
+    <button class="btn btn-primary px-4">
+      <i class="bi {{ 'bi-send' if mode == 'new' else 'bi-check2-circle' }} me-1"></i>
+      {{ 'Post Job' if mode == 'new' else 'Save changes' }}</button>
+    <a class="btn btn-link" href="{{ url_for('recruiter.my_jobs') }}">Cancel</a>
+  </form>
+</div>
+</div></div>
+{% endblock %}

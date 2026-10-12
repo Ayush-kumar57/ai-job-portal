@@ -105,3 +105,48 @@ body {
   padding: 0.4rem 1rem;
 }
 .btn-nav-outline:hover { background: #fff; color: var(--brand-1); }
+
+/* ---------- Page cards (forms, tables) ---------- */
+.page-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 2px 14px rgba(17, 24, 39, 0.06);
+}
+
+.page-title {
+  font-weight: 600;
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--brand-1);
+  box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+}
+
+.btn-primary {
+  background: var(--brand-1);
+  border-color: var(--brand-1);
+}
+.btn-primary:hover { background: var(--brand-2); border-color: var(--brand-2); }
+
+/* Dashboard number boxes */
+.stat-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--brand-1);
+  box-shadow: 0 2px 10px rgba(17, 24, 39, 0.05);
+}
+.stat-num   { font-size: 1.8rem; font-weight: 700; color: var(--brand-1); }
+.stat-label { color: #6b7280; font-size: 0.85rem; }
+
+/* ---------- Footer (Galgotias) ---------- */
+.app-footer {
+  background: #1e1b4b;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 1rem 0;
+  font-size: 0.9rem;
+}
+.app-footer strong { color: var(--accent); }

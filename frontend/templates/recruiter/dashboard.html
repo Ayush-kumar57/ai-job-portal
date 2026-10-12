@@ -2,22 +2,37 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h2 class="mb-1">Welcome, {{ session.name }}</h2>
-<p class="text-muted mb-4">Recruiter dashboard</p>
+<p class="text-muted mb-4">
+  Recruiter dashboard{% if profile %} · {{ profile.company_name }}{% endif %}
+</p>
+
+{% if not profile %}
+<div class="alert alert-warning">
+  <i class="bi bi-exclamation-triangle me-1"></i>
+  Please fill your <a href="{{ url_for('recruiter.company') }}">company profile</a> first, so your jobs show the company name.
+</div>
+{% endif %}
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">{{ job_count }}</div><div class="stat-label">Jobs posted</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">{{ open_count }}</div><div class="stat-label">Open jobs</div></div></div>
+</div>
+
 <div class="row g-3">
   <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">Post a Job</h5>
+    <h5 class="card-title"><i class="bi bi-plus-circle me-1"></i> Post a Job</h5>
     <p class="card-text text-muted">Create a new job opening</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+    <a href="{{ url_for('recruiter.new_job') }}" class="btn btn-outline-primary btn-sm">Open</a>
   </div></div></div>
   <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">My Jobs</h5>
+    <h5 class="card-title"><i class="bi bi-briefcase me-1"></i> My Jobs</h5>
     <p class="card-text text-muted">Edit or close your jobs</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+    <a href="{{ url_for('recruiter.my_jobs') }}" class="btn btn-outline-primary btn-sm">Open</a>
   </div></div></div>
   <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">Company Profile</h5>
+    <h5 class="card-title"><i class="bi bi-building me-1"></i> Company Profile</h5>
     <p class="card-text text-muted">Tell candidates about your company</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+    <a href="{{ url_for('recruiter.company') }}" class="btn btn-outline-primary btn-sm">Open</a>
   </div></div></div>
 </div>
 {% endblock %}
