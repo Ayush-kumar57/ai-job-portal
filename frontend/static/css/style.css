@@ -150,3 +150,6 @@ body {
   font-size: 0.9rem;
 }
 .app-footer strong { color: var(--accent); }
+
+.footer-logo    { height: 42px; width: 155px; object-fit: cover; object-position: left center; }
+.footer-divider { width: 1px; height: 28px; background: rgba(255, 255, 255, 0.3); }
