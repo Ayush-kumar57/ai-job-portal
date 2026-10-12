@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template
 import config
-from db import db
+from db import db, jobs, users
 from auth.routes import auth_bp
 from seeker.routes import seeker_bp
 from recruiter.routes import recruiter_bp
@@ -24,7 +24,13 @@ app.register_blueprint(admin_bp)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Front page pe live numbers dikhane ke liye
+    stats = {
+        'open_jobs': jobs.count_documents({'status': 'open'}),
+        'seekers': users.count_documents({'role': 'seeker'}),
+        'recruiters': users.count_documents({'role': 'recruiter'}),
+    }
+    return render_template('index.html', stats=stats)
 
 
 @app.route('/db-test')

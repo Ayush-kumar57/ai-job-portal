@@ -1,5 +1,114 @@
 {% extends 'base.html' %}
-{% block content %}
-<h1>AI Job Portal is running</h1>
-<p>Find jobs that match your resume.</p>
+{% block title %}AI Job Portal · Smart Resume Matching{% endblock %}
+
+{% block head %}
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,700;8..60,800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/landing.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block page %}
+<div class="landing flex-grow-1">
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="container text-center">
+      <div class="container-flashes mx-auto">{% include '_flashes.html' %}</div>
+
+      <div class="hero-pill">
+        <span class="pill-live"><span class="dot"></span>AI MATCH ENGINE ACTIVE</span>
+        <span class="pill-sep">/</span>
+        <span class="pill-sub">NLP + TF-IDF + Cosine Similarity</span>
+      </div>
+
+      <h1 class="hero-title">
+        Stop Scrolling Job Lists.<br>
+        <span class="gradient-text">Start Smart Matching.</span>
+      </h1>
+
+      <p class="hero-text">
+        AI Job Portal reads your resume and every job description, cleans the text with NLP,
+        and scores how well they match from <strong>0 to 100%</strong>. Seekers see the jobs that fit them best;
+        recruiters see candidates ranked by fit.
+      </p>
+
+      <div class="hero-actions">
+        {% if session.role %}
+        <a class="btn-hero btn-hero-light" href="{{ url_for(session.role + '.dashboard') }}">
+          <i class="bi bi-grid-1x2-fill"></i> Go to my Dashboard</a>
+        {% else %}
+        <a class="btn-hero btn-hero-light" href="{{ url_for('auth.register', role='seeker') }}">
+          <i class="bi bi-person-bounding-box"></i> Explore as Job Seeker</a>
+        <a class="btn-hero btn-hero-dark" href="{{ url_for('auth.register', role='recruiter') }}">
+          <i class="bi bi-briefcase"></i> Hire Talent as Recruiter</a>
+        {% endif %}
+        <a class="btn-hero btn-hero-ghost" href="#how">
+          <i class="bi bi-play-btn"></i> See How It Works</a>
+      </div>
+
+      <!-- Live numbers from MongoDB -->
+      <div class="hero-stats">
+        <div><span class="num">{{ stats.open_jobs }}</span><span class="lbl">Open jobs</span></div>
+        <div><span class="num">{{ stats.seekers }}</span><span class="lbl">Job seekers</span></div>
+        <div><span class="num">{{ stats.recruiters }}</span><span class="lbl">Recruiters</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== How it works ===== -->
+  <section class="how" id="how">
+    <div class="container">
+      <p class="section-kicker">HOW THE AI WORKS</p>
+      <h2 class="section-title">From resume to match score in 4 steps</h2>
+      <div class="row g-4 mt-2">
+        <div class="col-md-6 col-lg-3"><div class="step">
+          <span class="step-num">01</span><i class="bi bi-file-earmark-arrow-up"></i>
+          <h5>Upload</h5><p>Seeker uploads a PDF or DOCX resume. We pull out the raw text.</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="step">
+          <span class="step-num">02</span><i class="bi bi-funnel"></i>
+          <h5>Clean (NLP)</h5><p>Lowercase, remove stopwords and symbols, lemmatise words, extract skills.</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="step">
+          <span class="step-num">03</span><i class="bi bi-diagram-3"></i>
+          <h5>Vectorise (TF-IDF)</h5><p>Resume and job text become number vectors. Rare skills get more weight.</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="step">
+          <span class="step-num">04</span><i class="bi bi-bullseye"></i>
+          <h5>Match (Cosine)</h5><p>The angle between the two vectors gives a score from 0 to 100%.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Roles ===== -->
+  <section class="roles">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4"><div class="role-card">
+          <i class="bi bi-person-badge role-ic ic-green"></i>
+          <h5>For Job Seekers</h5>
+          <ul><li>Upload resume once</li><li>See your match % on every job</li><li>Get your top 5 recommended jobs</li><li>Track application status</li></ul>
+        </div></div>
+        <div class="col-lg-4"><div class="role-card">
+          <i class="bi bi-building role-ic ic-blue"></i>
+          <h5>For Recruiters</h5>
+          <ul><li>Post and manage jobs</li><li>See who applied, with scores</li><li>Candidates ranked by fit</li><li>Shortlist or reject</li></ul>
+        </div></div>
+        <div class="col-lg-4"><div class="role-card">
+          <i class="bi bi-shield-lock role-ic ic-red"></i>
+          <h5>For Admin</h5>
+          <ul><li>Dashboard with counts</li><li>Manage users and recruiters</li><li>Manage jobs</li><li>Manage applications</li></ul>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Galgotias strip ===== -->
+  <section class="gu-strip">
+    <div class="container d-flex flex-column flex-md-row align-items-center justify-content-center gap-3 text-center text-md-start">
+      <img src="{{ url_for('static', filename='img/galgotias-emblem.png') }}" alt="Galgotias University" width="50" height="50">
+      <div>
+        <div class="gu-title">MCA Major Project · Galgotias University, Greater Noida</div>
+        <div class="gu-sub">Built with Python Flask, MongoDB, NLTK and scikit-learn</div>
+      </div>
+    </div>
+  </section>
+
+</div>
 {% endblock %}

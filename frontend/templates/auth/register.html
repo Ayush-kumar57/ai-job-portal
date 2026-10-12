@@ -13,7 +13,7 @@
   <div class="mb-3"><label class="form-label">I am a</label>
     <select class="form-select" name="role" required>
       <option value="seeker">Job Seeker</option>
-      <option value="recruiter">Recruiter</option>
+      <option value="recruiter" {{ 'selected' if request.args.get('role') == 'recruiter' }}>Recruiter</option>
     </select></div>
   <button class="btn btn-primary w-100">Create account</button>
 </form>
