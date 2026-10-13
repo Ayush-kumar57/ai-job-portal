@@ -1,5 +1,7 @@
 from functools import wraps
 from flask import session, redirect, url_for, flash
+from bson import ObjectId
+from bson.errors import InvalidId
 
 
 def role_required(role):
@@ -13,3 +15,11 @@ def role_required(role):
             return f(*args, **kwargs)
         return wrapper
     return decorator
+
+
+def to_oid(id):
+    """URL wala text id -> MongoDB ObjectId. Galat id ho toh None (crash nahi)."""
+    try:
+        return ObjectId(id)
+    except InvalidId:
+        return None

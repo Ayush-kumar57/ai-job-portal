@@ -3,21 +3,40 @@
 {% block content %}
 <h2 class="mb-1">Welcome, {{ session.name }}</h2>
 <p class="text-muted mb-4">Job Seeker dashboard</p>
+
+{% if not profile %}
+<div class="alert alert-warning">
+  <i class="bi bi-exclamation-triangle me-1"></i>
+  Please fill your <a href="{{ url_for('seeker.profile') }}">profile</a> (skills, education) so we can match you with jobs.
+</div>
+{% endif %}
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">{{ applied }}</div><div class="stat-label">Jobs applied</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">{{ shortlisted }}</div><div class="stat-label">Shortlisted</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">{{ profile.skills | length if profile else 0 }}</div><div class="stat-label">Skills in profile</div></div></div>
+</div>
+
 <div class="row g-3">
   <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">Upload Resume</h5>
-    <p class="card-text text-muted">Upload your PDF or DOCX resume</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+    <h5 class="card-title"><i class="bi bi-person-badge me-1"></i> My Profile</h5>
+    <p class="card-text text-muted">Skills, education, experience</p>
+    <a href="{{ url_for('seeker.profile') }}" class="btn btn-outline-primary btn-sm">Open</a>
   </div></div></div>
   <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">Browse Jobs</h5>
-    <p class="card-text text-muted">See all open jobs and your match score</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+    <h5 class="card-title"><i class="bi bi-search me-1"></i> Browse Jobs</h5>
+    <p class="card-text text-muted">See all open jobs and apply</p>
+    <a href="{{ url_for('jobs.browse') }}" class="btn btn-outline-primary btn-sm">Open</a>
   </div></div></div>
   <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">My Applications</h5>
+    <h5 class="card-title"><i class="bi bi-file-earmark-text me-1"></i> My Applications</h5>
     <p class="card-text text-muted">Track the jobs you applied to</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
+    <a href="{{ url_for('seeker.my_applications') }}" class="btn btn-outline-primary btn-sm">Open</a>
+  </div></div></div>
+  <div class="col-md"><div class="card h-100"><div class="card-body">
+    <h5 class="card-title"><i class="bi bi-cloud-upload me-1"></i> Upload Resume</h5>
+    <p class="card-text text-muted">PDF or DOCX (coming on Day 5)</p>
+    <a href="#" class="btn btn-outline-secondary btn-sm disabled">Soon</a>
   </div></div></div>
 </div>
 {% endblock %}

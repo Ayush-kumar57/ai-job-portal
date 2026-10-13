@@ -1,23 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from bson import ObjectId
-from bson.errors import InvalidId
 from datetime import datetime
-from db import recruiters, jobs
-from utils import role_required
+from db import recruiters, jobs, applications, users
+from utils import role_required, to_oid
 
 recruiter_bp = Blueprint('recruiter', __name__, url_prefix='/recruiter')
 
 
 def my_id():
     return session['user_id']
-
-
-def to_oid(id):
-    """URL wala text id -> MongoDB ObjectId. Galat id ho toh None."""
-    try:
-        return ObjectId(id)
-    except InvalidId:
-        return None
 
 
 @recruiter_bp.route('/dashboard')
@@ -105,4 +96,37 @@ def close_job(id):
     if oid:
         jobs.update_one({'_id': oid, 'recruiter_id': my_id()}, {'$set': {'status': 'closed'}})
         flash('Job closed', 'info')
+    return redirect(url_for('recruiter.my_jobs'))
+
+
+@recruiter_bp.route('/jobs/<id>/applications')
+@role_required('recruiter')
+def job_applications(id):
+    oid = to_oid(id)
+    # 'recruiter_id': my_id() -> recruiter sirf APNI job ke applicants dekh sake
+    job = jobs.find_one({'_id': oid, 'recruiter_id': my_id()}) if oid else None
+    if not job:
+        flash('Job not found', 'danger')
+        return redirect(url_for('recruiter.my_jobs'))
+    apps = list(applications.find({'job_id': id}).sort('applied_at', -1))
+    for a in apps:
+        # application mein sirf seeker_id hai; naam/email users se uthao (manual join)
+        a['user'] = users.find_one({'_id': to_oid(a['seeker_id'])}) or {}
+    return render_template('recruiter/applications.html', job=job, apps=apps)
+
+
+@recruiter_bp.route('/applications/<id>/status', methods=['POST'])
+@role_required('recruiter')
+def set_status(id):
+    status = request.form.get('status')
+    oid = to_oid(id)
+    app_doc = applications.find_one({'_id': oid}) if oid else None
+    # sirf valid status, aur sirf apni job ki application badal sake
+    if status in ('shortlisted', 'rejected', 'applied') and app_doc:
+        job = jobs.find_one({'_id': to_oid(app_doc['job_id']), 'recruiter_id': my_id()})
+        if job:
+            applications.update_one({'_id': oid}, {'$set': {'status': status}})
+            flash('Candidate marked as ' + status, 'success')
+            return redirect(url_for('recruiter.job_applications', id=app_doc['job_id']))
+    flash('Could not update status', 'danger')
     return redirect(url_for('recruiter.my_jobs'))

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-8">
+<div class="page-card">
+  <h2 class="page-title"><i class="bi bi-person-badge me-2"></i>My Profile</h2>
+  <p class="text-muted">Your skills are used to match you with jobs, so add them carefully (comma separated).</p>
+  <form method="post">
+    <div class="row">
+      <div class="col-md-6 mb-3"><label class="form-label">Phone</label>
+        <input class="form-control" name="phone" value="{{ p.phone or '' }}" placeholder="98xxxxxxxx"></div>
+      <div class="col-md-6 mb-3"><label class="form-label">Location</label>
+        <input class="form-control" name="location" value="{{ p.location or '' }}" placeholder="Greater Noida"></div>
+    </div>
+    <div class="mb-3"><label class="form-label">Skills <small class="text-muted">(comma separated)</small></label>
+      <input class="form-control" name="skills" value="{{ p.skills | join(', ') if p.skills else '' }}"
+             placeholder="Python, Flask, MongoDB, SQL" required></div>
+    <div class="row">
+      <div class="col-md-6 mb-3"><label class="form-label">Experience (years)</label>
+        <input class="form-control" type="number" step="0.5" min="0" name="experience_years" value="{{ p.experience_years or 0 }}"></div>
+      <div class="col-md-6 mb-3"><label class="form-label">Education</label>
+        <input class="form-control" name="education" value="{{ p.education or '' }}" placeholder="MCA, Galgotias University, 2026"></div>
+    </div>
+    <button class="btn btn-primary px-4"><i class="bi bi-check2-circle me-1"></i> Save</button>
+  </form>
+</div>
+</div></div>
+{% endblock %}

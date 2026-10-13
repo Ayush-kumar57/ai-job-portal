@@ -3,7 +3,7 @@ from flask import Flask, render_template
 import config
 from db import db, jobs, users
 from auth.routes import auth_bp
-from seeker.routes import seeker_bp
+from seeker.routes import seeker_bp, jobs_bp
 from recruiter.routes import recruiter_bp
 from admin.routes import admin_bp
 
@@ -18,6 +18,7 @@ app.config.from_object(config)
 # Har role ke routes alag file (blueprint) mein hain, yahan sabko jodte hain
 app.register_blueprint(auth_bp)
 app.register_blueprint(seeker_bp)
+app.register_blueprint(jobs_bp)      # /jobs, /jobs/<id>, /jobs/<id>/apply
 app.register_blueprint(recruiter_bp)
 app.register_blueprint(admin_bp)
 

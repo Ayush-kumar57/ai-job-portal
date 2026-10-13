@@ -153,3 +153,7 @@ body {
 
 .footer-logo    { height: 42px; width: 155px; object-fit: cover; object-position: left center; }
 .footer-divider { width: 1px; height: 28px; background: rgba(255, 255, 255, 0.3); }
+
+/* Job cards on Browse Jobs page */
+.job-card { border: 1px solid #e5e7eb; border-radius: 14px; transition: transform .15s, box-shadow .15s; }
+.job-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(17, 24, 39, 0.08); }

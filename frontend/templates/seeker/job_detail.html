@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<a class="text-decoration-none" href="{{ url_for('jobs.browse') }}"><i class="bi bi-arrow-left"></i> Back to jobs</a>
+<div class="row justify-content-center mt-2"><div class="col-lg-9">
+<div class="page-card">
+  <h2 class="page-title mb-1">{{ job.title }}</h2>
+  <p class="text-muted">
+    <i class="bi bi-building me-1"></i>{{ job.company_name }}
+    <span class="mx-1">&middot;</span><i class="bi bi-geo-alt me-1"></i>{{ job.location }}
+    <span class="mx-1">&middot;</span><i class="bi bi-briefcase me-1"></i>{{ job.job_type }}
+    {% if job.salary_range %}<span class="mx-1">&middot;</span><i class="bi bi-cash me-1"></i>{{ job.salary_range }}{% endif %}
+    <span class="mx-1">&middot;</span><i class="bi bi-calendar me-1"></i>Posted {{ job.created_at.strftime('%d %b %Y') }}
+  </p>
+
+  <h6 class="mt-4">Required skills</h6>
+  <p>{% for s in job.required_skills %}<span class="badge bg-info-subtle text-info-emphasis me-1 mb-1">{{ s }}</span>{% endfor %}</p>
+
+  <h6 class="mt-4">Description</h6>
+  <div class="border rounded p-3 bg-light" style="white-space: pre-line">{{ job.description }}</div>
+
+  <div class="mt-4">
+  {% if job.status != 'open' %}
+    <button class="btn btn-secondary" disabled><i class="bi bi-lock me-1"></i> This job is closed</button>
+  {% elif already %}
+    <button class="btn btn-success" disabled><i class="bi bi-check2-all me-1"></i> Already applied</button>
+    <a class="ms-2" href="{{ url_for('seeker.my_applications') }}">See my applications</a>
+  {% else %}
+    <form method="post" action="{{ url_for('jobs.apply', id=job._id) }}" class="d-inline">
+      <button class="btn btn-success px-4"><i class="bi bi-send me-1"></i> Apply</button>
+    </form>
+  {% endif %}
+  </div>
+</div>
+</div></div>
+{% endblock %}
