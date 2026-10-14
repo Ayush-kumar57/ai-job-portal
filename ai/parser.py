@@ -8,7 +8,7 @@ def extract_text(path):
 
     if lower.endswith('.pdf'):
         with pymupdf.open(path) as doc:
-            return ' '.join(page.get_text() for page in doc).strip()
+            return '\n'.join(page.get_text() for page in doc).strip()
 
     if lower.endswith('.docx'):
         d = docx.Document(path)
@@ -16,8 +16,7 @@ def extract_text(path):
         # Bahut resumes mein skills/education table ke andar hote hain
         for table in d.tables:
             for row in table.rows:
-                for cell in row.cells:
-                    parts.append(cell.text)
-        return ' '.join(parts).strip()
+                parts.append(' '.join(cell.text for cell in row.cells))
+        return '\n'.join(parts).strip()
 
     raise ValueError('Unsupported file type')

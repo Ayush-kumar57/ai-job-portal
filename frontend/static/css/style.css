@@ -157,3 +157,8 @@ body {
 /* Job cards on Browse Jobs page */
 .job-card { border: 1px solid #e5e7eb; border-radius: 14px; transition: transform .15s, box-shadow .15s; }
 .job-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(17, 24, 39, 0.08); }
+
+/* Resume text preview box */
+.resume-preview { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem; white-space: pre-wrap; max-height: 420px; overflow: auto; font-size: 0.85rem; margin: 0; }
+
+.avatar-lg { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); color: #fff; font-weight: 700; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; }

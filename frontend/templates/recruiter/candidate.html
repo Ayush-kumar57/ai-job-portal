@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Candidate - {{ user.name }}{% endblock %}
+{% block content %}
+<a class="text-decoration-none" href="javascript:history.back()"><i class="bi bi-arrow-left"></i> Back to applications</a>
+<div class="row g-4 mt-0">
+  <div class="col-lg-5">
+    <div class="page-card h-100">
+      <div class="d-flex align-items-center mb-3">
+        <div class="avatar-lg me-3">{{ user.name[0] | upper }}</div>
+        <div>
+          <h2 class="page-title mb-0">{{ user.name }}</h2>
+          <div class="text-muted"><i class="bi bi-envelope me-1"></i>{{ user.email }}</div>
+        </div>
+      </div>
+      <table class="table table-sm table-borderless mb-3">
+        <tr><th class="text-muted fw-normal" style="width: 130px">Phone</th><td>{{ p.phone or '-' }}</td></tr>
+        <tr><th class="text-muted fw-normal">Location</th><td>{{ p.location or '-' }}</td></tr>
+        <tr><th class="text-muted fw-normal">Education</th><td>{{ p.education or '-' }}</td></tr>
+        <tr><th class="text-muted fw-normal">Experience</th><td>{{ p.experience_years or 0 }} year(s)</td></tr>
+      </table>
+      <h6>Skills (from profile)</h6>
+      <p>
+        {% for s in p.skills %}<span class="badge bg-info-subtle text-info-emphasis me-1 mb-1">{{ s }}</span>
+        {% else %}<span class="text-muted">Not filled</span>{% endfor %}
+      </p>
+      {% if r %}
+      <h6 class="mt-3">Resume</h6>
+      <p class="mb-0">
+        <i class="bi bi-file-earmark-{{ 'pdf text-danger' if r.file_type == 'pdf' else 'word text-primary' }} me-1"></i>{{ r.file_name }}
+        <small class="text-muted">&middot; {{ r.uploaded_at.strftime('%d %b %Y') }}</small>
+      </p>
+      <small class="text-muted">Download for recruiters comes on Day 9.</small>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="page-card h-100">
+      <h5 class="mb-2"><i class="bi bi-body-text me-2"></i>Resume text</h5>
+      {% if r %}
+      <pre class="resume-preview" style="max-height: 560px">{{ r.raw_text }}</pre>
+      {% else %}
+      <div class="text-center text-muted py-5"><i class="bi bi-file-earmark-x fs-1 d-block mb-2"></i>This candidate has not uploaded a resume.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

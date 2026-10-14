@@ -10,6 +10,12 @@
   Please fill your <a href="{{ url_for('seeker.profile') }}">profile</a> (skills, education) so we can match you with jobs.
 </div>
 {% endif %}
+{% if profile and not profile.resume_id %}
+<div class="alert alert-info">
+  <i class="bi bi-cloud-upload me-1"></i>
+  <a href="{{ url_for('seeker.resume') }}">Upload your resume</a> to apply for jobs.
+</div>
+{% endif %}
 
 <div class="row g-3 mb-4">
   <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">{{ applied }}</div><div class="stat-label">Jobs applied</div></div></div>
@@ -35,8 +41,8 @@
   </div></div></div>
   <div class="col-md"><div class="card h-100"><div class="card-body">
     <h5 class="card-title"><i class="bi bi-cloud-upload me-1"></i> Upload Resume</h5>
-    <p class="card-text text-muted">PDF or DOCX (coming on Day 5)</p>
-    <a href="#" class="btn btn-outline-secondary btn-sm disabled">Soon</a>
+    <p class="card-text text-muted">PDF or DOCX, we read the text for matching</p>
+    <a href="{{ url_for('seeker.resume') }}" class="btn btn-outline-primary btn-sm">Open</a>
   </div></div></div>
 </div>
 {% endblock %}

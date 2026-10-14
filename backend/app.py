@@ -1,6 +1,10 @@
 import os
+import sys
 from flask import Flask, render_template
 import config
+
+# ai/ package project root mein hai (backend/ ke bahar), isliye root ko Python ke search path mein jodte hain
+sys.path.insert(0, config.BASE_DIR)
 from db import db, jobs, users
 from auth.routes import auth_bp
 from seeker.routes import seeker_bp, jobs_bp

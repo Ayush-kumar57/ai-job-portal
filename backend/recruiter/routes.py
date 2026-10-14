@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from bson import ObjectId
 from datetime import datetime
-from db import recruiters, jobs, applications, users
+from db import recruiters, jobs, applications, users, job_seekers, resumes
 from utils import role_required, to_oid
 
 recruiter_bp = Blueprint('recruiter', __name__, url_prefix='/recruiter')
@@ -130,3 +130,18 @@ def set_status(id):
             return redirect(url_for('recruiter.job_applications', id=app_doc['job_id']))
     flash('Could not update status', 'danger')
     return redirect(url_for('recruiter.my_jobs'))
+
+
+@recruiter_bp.route('/candidates/<seeker_id>')
+@role_required('recruiter')
+def candidate(seeker_id):
+    # Sirf un candidates ko dekh sake jinhone recruiter ki kisi job pe apply kiya ho
+    my_job_ids = [str(j['_id']) for j in jobs.find({'recruiter_id': my_id()}, {'_id': 1})]
+    applied = applications.find_one({'seeker_id': seeker_id, 'job_id': {'$in': my_job_ids}})
+    user = users.find_one({'_id': to_oid(seeker_id), 'role': 'seeker'})
+    if not user or not applied:
+        flash('Candidate not found', 'danger')
+        return redirect(url_for('recruiter.my_jobs'))
+    p = job_seekers.find_one({'user_id': seeker_id}) or {}
+    r = resumes.find_one({'_id': to_oid(p['resume_id'])}) if p.get('resume_id') else None
+    return render_template('recruiter/candidate.html', user=user, p=p, r=r)

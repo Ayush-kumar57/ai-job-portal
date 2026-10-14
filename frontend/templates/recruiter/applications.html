@@ -19,7 +19,10 @@
     {% set color = {'applied': 'primary', 'shortlisted': 'success', 'rejected': 'danger'} %}
     {% for a in apps %}
     <tr>
-      <td class="fw-semibold">{{ a.user.name or '(deleted user)' }}</td>
+      <td class="fw-semibold">
+        {% if a.user._id %}<a class="text-decoration-none" href="{{ url_for('recruiter.candidate', seeker_id=a.seeker_id) }}">{{ a.user.name }} <i class="bi bi-box-arrow-up-right small"></i></a>
+        {% else %}<span class="text-muted">(deleted user)</span>{% endif %}
+      </td>
       <td>{{ a.user.email }}</td>
       <td>{{ a.applied_at.strftime('%d %b %Y') }}</td>
       <td><span class="badge rounded-pill bg-{{ color.get(a.status, 'secondary') }}">{{ a.status }}</span></td>
