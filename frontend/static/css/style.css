@@ -162,3 +162,6 @@ body {
 .resume-preview { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem; white-space: pre-wrap; max-height: 420px; overflow: auto; font-size: 0.85rem; margin: 0; }
 
 .avatar-lg { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); color: #fff; font-weight: 700; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; }
+
+/* Day 6: have / missing skills box on job page */
+.skill-match { background: #f9fafb; border: 1px dashed #c7d2fe; border-radius: 12px; padding: 0.9rem 1rem; }

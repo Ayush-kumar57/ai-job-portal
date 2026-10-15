@@ -8,6 +8,7 @@ import config
 from db import job_seekers, jobs, applications, resumes
 from utils import role_required, to_oid
 from ai.parser import extract_text
+from ai.nlp import clean_text, extract_skills
 
 # Do blueprints: /seeker/... (profile, dashboard, applications) aur /jobs/... (bina prefix)
 seeker_bp = Blueprint('seeker', __name__, url_prefix='/seeker')
@@ -70,7 +71,13 @@ def detail(id):
         flash('Job not found', 'danger')
         return redirect(url_for('jobs.browse'))
     already = applications.find_one({'job_id': id, 'seeker_id': my_id()}) is not None
-    return render_template('seeker/job_detail.html', job=job, already=already)
+    # Day 6: resume ki skills vs job ki required skills -> have / missing
+    r = current_resume()
+    mine = set(r.get('extracted_skills', [])) if r else set()
+    have = [sk for sk in job['required_skills'] if sk in mine]
+    missing = [sk for sk in job['required_skills'] if sk not in mine]
+    return render_template('seeker/job_detail.html', job=job, already=already,
+                           have=have, missing=missing, has_resume=r is not None)
 
 
 @jobs_bp.route('/jobs/<id>/apply', methods=['POST'])
@@ -155,7 +162,9 @@ def resume():
             'user_id': my_id(),
             'file_name': secure_filename(f.filename),   # original naam, bas safe banaya
             'file_path': path, 'file_type': ext,
-            'raw_text': text, 'clean_text': '', 'extracted_skills': [],   # clean_text/skills Day 6
+            'raw_text': text,
+            'clean_text': clean_text(text),            # Day 6: TF-IDF ke liye saaf text
+            'extracted_skills': extract_skills(text),  # Day 6: skills.txt se mili skills
             'uploaded_at': datetime.now()})
         # profile hamesha LATEST resume ki taraf point kare
         job_seekers.update_one({'user_id': my_id()},

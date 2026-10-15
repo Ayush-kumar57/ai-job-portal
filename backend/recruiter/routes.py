@@ -3,6 +3,7 @@ from bson import ObjectId
 from datetime import datetime
 from db import recruiters, jobs, applications, users, job_seekers, resumes
 from utils import role_required, to_oid
+from ai.nlp import clean_text
 
 recruiter_bp = Blueprint('recruiter', __name__, url_prefix='/recruiter')
 
@@ -48,6 +49,8 @@ def job_from_form():
         'location': request.form['location'].strip(),
         'job_type': request.form['job_type'],
         'salary_range': request.form['salary_range'].strip(),
+        # Day 6: title + description + skills ka saaf text, Day 7 mein resume se compare hoga
+        'clean_text': clean_text(f"{request.form['title']} {request.form['description']} {' '.join(skills)}"),
     }
 
 
@@ -59,7 +62,7 @@ def new_job():
         job = job_from_form()
         job.update({'recruiter_id': my_id(),
                     'company_name': profile.get('company_name', 'Unknown company'),
-                    'status': 'open', 'clean_text': '',
+                    'status': 'open',
                     'created_at': datetime.now()})
         jobs.insert_one(job)
         flash('Job posted', 'success')
