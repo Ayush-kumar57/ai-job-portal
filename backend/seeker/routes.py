@@ -9,6 +9,7 @@ from db import job_seekers, jobs, applications, resumes
 from utils import role_required, to_oid
 from ai.parser import extract_text
 from ai.nlp import clean_text, extract_skills
+from ai.matcher import final_score
 
 # Do blueprints: /seeker/... (profile, dashboard, applications) aur /jobs/... (bina prefix)
 seeker_bp = Blueprint('seeker', __name__, url_prefix='/seeker')
@@ -76,8 +77,9 @@ def detail(id):
     mine = set(r.get('extracted_skills', [])) if r else set()
     have = [sk for sk in job['required_skills'] if sk in mine]
     missing = [sk for sk in job['required_skills'] if sk not in mine]
+    score = score_for(job, r)                       # Day 7: None agar resume nahi
     return render_template('seeker/job_detail.html', job=job, already=already,
-                           have=have, missing=missing, has_resume=r is not None)
+                           have=have, missing=missing, has_resume=r is not None, score=score)
 
 
 @jobs_bp.route('/jobs/<id>/apply', methods=['POST'])
@@ -93,9 +95,10 @@ def apply(id):
     if not p.get('resume_id'):
         flash('Upload your resume before applying', 'warning')
         return redirect(url_for('seeker.resume'))
+    score = score_for(job) or 0                     # Day 7: apply ke waqt ka score save hota hai
     try:
         applications.insert_one({'job_id': id, 'seeker_id': my_id(), 'resume_id': p['resume_id'],
-                                 'status': 'applied', 'match_score': 0,
+                                 'status': 'applied', 'match_score': score,
                                  'applied_at': datetime.now()})
         flash('Applied successfully', 'success')
     except DuplicateKeyError:
@@ -124,6 +127,15 @@ def current_resume():
     """Seeker ka latest resume document (ya None)."""
     p = job_seekers.find_one({'user_id': my_id()}) or {}
     return resumes.find_one({'_id': to_oid(p['resume_id'])}) if p.get('resume_id') else None
+
+
+def score_for(job, r=None):
+    """Logged-in seeker ke resume ka is job se match (0-100). Resume nahi -> None."""
+    r = r or current_resume()
+    if not r:
+        return None
+    return final_score(r.get('clean_text', ''), job.get('clean_text', ''),
+                       r.get('extracted_skills', []), job.get('required_skills', []))
 
 
 @seeker_bp.route('/resume', methods=['GET', 'POST'])

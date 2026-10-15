@@ -111,7 +111,7 @@ def job_applications(id):
     if not job:
         flash('Job not found', 'danger')
         return redirect(url_for('recruiter.my_jobs'))
-    apps = list(applications.find({'job_id': id}).sort('applied_at', -1))
+    apps = list(applications.find({'job_id': id}).sort('match_score', -1))   # Day 7: best match upar
     for a in apps:
         # application mein sirf seeker_id hai; naam/email users se uthao (manual join)
         a['user'] = users.find_one({'_id': to_oid(a['seeker_id'])}) or {}

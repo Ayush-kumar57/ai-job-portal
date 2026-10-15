@@ -58,7 +58,7 @@ def extract_skills(text):
             # chhoti skill: dono taraf separator (| ya line break) hona chahiye, beech mein sirf space
             pattern = r'(?<=[|\n])[ \t]*' + re.escape(skill) + r'[ \t]*(?=[|\n])'
         else:
-            pattern = r'(?<![a-z0-9])' + re.escape(name) + r'(?![a-z0-9])'
+            pattern = r'(?<![a-z0-9])' + re.escape(name) + r's?(?![a-z0-9])'   # 's?' = plural bhi chalega (apis)
         m = re.search(pattern, text)
         if m:
             found[skill] = m.start()

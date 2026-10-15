@@ -1,0 +1,20 @@
+{# Reusable pieces. Use: {% from '_macros.html' import score_badge %} then {{ score_badge(score) }} #}
+
+{# Colour rule (one place, used on Day 7 and Day 8 pages): green 70+, yellow 40-69, grey below 40 #}
+{% macro score_badge(score, size='') %}
+  {%- if score is none -%}
+    <span class="badge bg-light text-dark border"><i class="bi bi-cloud-upload me-1"></i>Upload a resume to see your match</span>
+  {%- elif score >= 70 -%}
+    <span class="badge bg-success {{ size }}"><i class="bi bi-stars me-1"></i>Match {{ score }}%</span>
+  {%- elif score >= 40 -%}
+    <span class="badge bg-warning text-dark {{ size }}">Match {{ score }}%</span>
+  {%- else -%}
+    <span class="badge bg-secondary {{ size }}">Match {{ score }}%</span>
+  {%- endif -%}
+{% endmacro %}
+
+{# Small version for table cells: just the number, same colours #}
+{% macro score_cell(score) %}
+  {%- set s = score or 0 -%}
+  <span class="badge rounded-pill bg-{{ 'success' if s >= 70 else ('warning text-dark' if s >= 40 else 'secondary') }}">{{ s }}%</span>
+{% endmacro %}

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from '_macros.html' import score_cell %}
 {% block title %}Applications - {{ job.title }}{% endblock %}
 {% block content %}
 <a class="text-decoration-none" href="{{ url_for('recruiter.my_jobs') }}"><i class="bi bi-arrow-left"></i> Back to my jobs</a>
@@ -6,7 +7,7 @@
   <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
     <div>
       <h2 class="page-title mb-0"><i class="bi bi-people me-2"></i>Received Applications</h2>
-      <p class="text-muted mb-0">{{ job.title }} &middot; {{ job.location }} &middot;
+      <p class="text-muted mb-0">{{ job.title }} &middot; {{ job.location }} &middot; sorted by match score &middot;
         <span class="badge rounded-pill bg-{{ 'success' if job.status == 'open' else 'secondary' }}">{{ job.status }}</span></p>
     </div>
     <span class="fs-5"><strong>{{ apps | length }}</strong> <span class="text-muted">candidate(s)</span></span>
@@ -14,17 +15,19 @@
 
   <div class="table-responsive mt-3">
   <table class="table table-hover align-middle">
-    <thead><tr><th>Candidate</th><th>Email</th><th>Applied on</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+    <thead><tr><th>#</th><th>Candidate</th><th>Email</th><th>Applied on</th><th>Score <i class="bi bi-sort-down small text-muted"></i></th><th>Status</th><th class="text-end">Action</th></tr></thead>
     <tbody>
     {% set color = {'applied': 'primary', 'shortlisted': 'success', 'rejected': 'danger'} %}
     {% for a in apps %}
     <tr>
+      <td class="text-muted">{{ loop.index }}</td>
       <td class="fw-semibold">
         {% if a.user._id %}<a class="text-decoration-none" href="{{ url_for('recruiter.candidate', seeker_id=a.seeker_id) }}">{{ a.user.name }} <i class="bi bi-box-arrow-up-right small"></i></a>
         {% else %}<span class="text-muted">(deleted user)</span>{% endif %}
       </td>
       <td>{{ a.user.email }}</td>
       <td>{{ a.applied_at.strftime('%d %b %Y') }}</td>
+      <td>{{ score_cell(a.match_score) }}</td>
       <td><span class="badge rounded-pill bg-{{ color.get(a.status, 'secondary') }}">{{ a.status }}</span></td>
       <td class="text-end text-nowrap">
         {% if a.status != 'shortlisted' %}
@@ -48,7 +51,7 @@
       </td>
     </tr>
     {% else %}
-    <tr><td colspan="5" class="text-center text-muted py-4">No one has applied to this job yet.</td></tr>
+    <tr><td colspan="7" class="text-center text-muted py-4">No one has applied to this job yet.</td></tr>
     {% endfor %}
     </tbody>
   </table>

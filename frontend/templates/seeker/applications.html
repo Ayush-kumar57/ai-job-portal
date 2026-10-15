@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% from '_macros.html' import score_cell %}
 {% block title %}My Applications{% endblock %}
 {% block content %}
 <div class="page-card">
   <h2 class="page-title"><i class="bi bi-file-earmark-text me-2"></i>My Applications</h2>
   <div class="table-responsive">
   <table class="table table-hover align-middle">
-    <thead><tr><th>Job</th><th>Company</th><th>Applied on</th><th>Status</th></tr></thead>
+    <thead><tr><th>Job</th><th>Company</th><th>Applied on</th><th>Score</th><th>Status</th></tr></thead>
     <tbody>
     {% set color = {'applied': 'primary', 'shortlisted': 'success', 'rejected': 'danger'} %}
     {% for a in apps %}
@@ -16,10 +17,11 @@
       </td>
       <td>{{ a.job.company_name }}</td>
       <td>{{ a.applied_at.strftime('%d %b %Y') }}</td>
+      <td>{{ score_cell(a.match_score) }}</td>
       <td><span class="badge rounded-pill bg-{{ color.get(a.status, 'secondary') }}">{{ a.status }}</span></td>
     </tr>
     {% else %}
-    <tr><td colspan="4" class="text-center text-muted py-4">
+    <tr><td colspan="5" class="text-center text-muted py-4">
       You have not applied anywhere yet. <a href="{{ url_for('jobs.browse') }}">Browse jobs</a>
     </td></tr>
     {% endfor %}
