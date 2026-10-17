@@ -10,6 +10,7 @@ from utils import role_required, to_oid
 from ai.parser import extract_text
 from ai.nlp import clean_text, extract_skills
 from ai.matcher import final_score
+from recommend import recommend_jobs          # Day 8
 
 # Do blueprints: /seeker/... (profile, dashboard, applications) aur /jobs/... (bina prefix)
 seeker_bp = Blueprint('seeker', __name__, url_prefix='/seeker')
@@ -26,8 +27,16 @@ def dashboard():
     applied = applications.count_documents({'seeker_id': my_id()})
     shortlisted = applications.count_documents({'seeker_id': my_id(), 'status': 'shortlisted'})
     profile = job_seekers.find_one({'user_id': my_id()})
+    top = recommend_jobs(my_id(), limit=3)          # Day 8: top 3 matches (None = resume nahi)
     return render_template('seeker/dashboard.html', applied=applied,
-                           shortlisted=shortlisted, profile=profile)
+                           shortlisted=shortlisted, profile=profile, top=top)
+
+
+@seeker_bp.route('/recommended')
+@role_required('seeker')
+def recommended():
+    # Day 8: resume ke hisaab se top 5 open jobs. jobs=None -> "Upload a resume" empty state
+    return render_template('seeker/recommended.html', jobs=recommend_jobs(my_id(), limit=5))
 
 
 @seeker_bp.route('/profile', methods=['GET', 'POST'])

@@ -4,6 +4,7 @@ from datetime import datetime
 from db import recruiters, jobs, applications, users, job_seekers, resumes
 from utils import role_required, to_oid
 from ai.nlp import clean_text
+from recommend import recommend_candidates   # Day 8
 
 recruiter_bp = Blueprint('recruiter', __name__, url_prefix='/recruiter')
 
@@ -18,8 +19,11 @@ def dashboard():
     job_count = jobs.count_documents({'recruiter_id': my_id()})
     open_count = jobs.count_documents({'recruiter_id': my_id(), 'status': 'open'})
     profile = recruiters.find_one({'user_id': my_id()})
+    # Day 8: sabse nayi job ke top 3 candidates (resume wale seekers, apply kiya ho ya nahi)
+    latest = jobs.find_one({'recruiter_id': my_id()}, sort=[('created_at', -1)])
+    top = recommend_candidates(str(latest['_id']), limit=3) if latest else []
     return render_template('recruiter/dashboard.html', job_count=job_count,
-                           open_count=open_count, profile=profile)
+                           open_count=open_count, profile=profile, latest=latest, top=top)
 
 
 @recruiter_bp.route('/company', methods=['GET', 'POST'])
@@ -118,6 +122,19 @@ def job_applications(id):
     return render_template('recruiter/applications.html', job=job, apps=apps)
 
 
+@recruiter_bp.route('/jobs/<id>/recommended')
+@role_required('recruiter')
+def recommended(id):
+    oid = to_oid(id)
+    job = jobs.find_one({'_id': oid, 'recruiter_id': my_id()}) if oid else None   # sirf apni job
+    if not job:
+        flash('Job not found', 'danger')
+        return redirect(url_for('recruiter.my_jobs'))
+    only = request.args.get('applicants') == '1'          # ?applicants=1 -> sirf apply karne wale
+    cands = recommend_candidates(id, only_applicants=only)
+    return render_template('recruiter/recommended.html', job=job, cands=cands, only=only)
+
+
 @recruiter_bp.route('/applications/<id>/status', methods=['POST'])
 @role_required('recruiter')
 def set_status(id):
@@ -138,13 +155,14 @@ def set_status(id):
 @recruiter_bp.route('/candidates/<seeker_id>')
 @role_required('recruiter')
 def candidate(seeker_id):
-    # Sirf un candidates ko dekh sake jinhone recruiter ki kisi job pe apply kiya ho
+    # Day 5: jinhone recruiter ki kisi job pe apply kiya. Day 8: ya jinke paas resume hai
+    # (recommended list mein aate hain, isliye unka profile bhi khulna chahiye)
     my_job_ids = [str(j['_id']) for j in jobs.find({'recruiter_id': my_id()}, {'_id': 1})]
     applied = applications.find_one({'seeker_id': seeker_id, 'job_id': {'$in': my_job_ids}})
     user = users.find_one({'_id': to_oid(seeker_id), 'role': 'seeker'})
-    if not user or not applied:
+    p = job_seekers.find_one({'user_id': seeker_id}) or {}
+    if not user or not (applied or p.get('resume_id')):
         flash('Candidate not found', 'danger')
         return redirect(url_for('recruiter.my_jobs'))
-    p = job_seekers.find_one({'user_id': seeker_id}) or {}
     r = resumes.find_one({'_id': to_oid(p['resume_id'])}) if p.get('resume_id') else None
     return render_template('recruiter/candidate.html', user=user, p=p, r=r)

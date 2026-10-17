@@ -26,6 +26,12 @@
         {% if session.role %}
         <a class="nav-link {% if request.endpoint and request.endpoint.endswith('.dashboard') %}active{% endif %}"
            href="{{ url_for(session.role + '.dashboard') }}"><i class="bi bi-grid-1x2-fill me-1"></i> Dashboard</a>
+        {% if session.role == 'seeker' %}
+        <a class="nav-link {% if request.endpoint == 'jobs.browse' %}active{% endif %}" href="{{ url_for('jobs.browse') }}"><i class="bi bi-search me-1"></i> Jobs</a>
+        <a class="nav-link {% if request.endpoint == 'seeker.recommended' %}active{% endif %}" href="{{ url_for('seeker.recommended') }}"><i class="bi bi-stars me-1"></i> Recommended</a>
+        {% elif session.role == 'recruiter' %}
+        <a class="nav-link {% if request.endpoint == 'recruiter.my_jobs' %}active{% endif %}" href="{{ url_for('recruiter.my_jobs') }}"><i class="bi bi-briefcase me-1"></i> My Jobs</a>
+        {% endif %}
         <div class="user-chip d-flex align-items-center gap-2 my-2 my-lg-0">
           <span class="avatar">{{ session.name[:1] | upper }}</span>
           <span class="d-flex flex-column lh-sm">

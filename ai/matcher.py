@@ -19,17 +19,13 @@ def match_score(resume_clean, job_clean):
 
 
 def score_many(base_clean, other_cleans):
-    """Ek text vs bahut saare (Day 8: ek resume vs saari jobs). Scores usi order mein."""
-    other_cleans = list(other_cleans)
-    if not base_clean or not other_cleans or not any(other_cleans):
-        return [0.0] * len(other_cleans)
-    vec = TfidfVectorizer()
-    try:
-        m = vec.fit_transform([base_clean] + other_cleans)
-    except ValueError:
-        return [0.0] * len(other_cleans)
-    scores = cosine_similarity(m[0:1], m[1:])[0]          # row 0 vs baaki sab
-    return [round(float(s) * 100, 1) for s in scores]
+    """Ek text vs bahut saare (Day 8: ek resume vs saari jobs). Scores usi order mein.
+    Har pair ke liye alag fit (match_score hi loop mein) - jaan-bujh ke.
+    Pehle sab texts ek saath fit kiye the (ek hi vectorizer, tez), par tab IDF is baat pe depend
+    karta hai ki batch mein kaun se texts hain: same resume-job pair ko seeker page pe 46.7,
+    recruiter page pe 46.0 aur 'only applicants' filter pe 41.6 mila. Ab har page pe wahi number
+    aata hai jo job page (Day 7) dikhata hai. 50-100 jobs ke liye bhi ye milliseconds ka kaam hai."""
+    return [match_score(base_clean, o) for o in other_cleans]
 
 
 def skill_overlap(resume_skills, required_skills):
