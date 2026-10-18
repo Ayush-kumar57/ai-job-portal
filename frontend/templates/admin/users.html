@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Manage Users{% endblock %}
+{% from '_macros.html' import role_badge %}
+{% block content %}
+<div class="page-card">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h2 class="page-title mb-0"><i class="bi bi-people me-2"></i>Manage Users</h2>
+    {# GET form: /admin/users?q=rahul&role=seeker #}
+    <form class="d-flex gap-2" method="get">
+      <select class="form-select" name="role" style="width: auto" onchange="this.form.submit()">
+        <option value="">All roles</option>
+        {% for r in ['seeker', 'recruiter', 'admin'] %}
+        <option value="{{ r }}" {% if role == r %}selected{% endif %}>{{ r | capitalize }}</option>
+        {% endfor %}
+      </select>
+      <input class="form-control" name="q" value="{{ q }}" placeholder="Name or email">
+      <button class="btn btn-primary text-nowrap"><i class="bi bi-search me-1"></i> Search</button>
+      {% if q or role %}<a class="btn btn-outline-secondary" href="{{ url_for('admin.manage_users') }}">Clear</a>{% endif %}
+    </form>
+  </div>
+  <p class="text-muted mt-2 mb-0">{{ users | length }} user(s){% if q %} matching "<strong>{{ q }}</strong>"{% endif %}</p>
+
+  <div class="table-responsive mt-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th class="text-end">Action</th></tr></thead>
+    <tbody>
+    {% for u in users %}
+    <tr>
+      <td class="text-muted">{{ loop.index }}</td>
+      <td class="fw-semibold">{{ u.name }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ role_badge(u.role) }}</td>
+      <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+      <td class="text-end">
+        {% if u.role == 'admin' %}
+          <span class="text-muted small"><i class="bi bi-shield-lock me-1"></i>protected</span>
+        {% else %}
+        {# POST + confirm(): delete kabhi link se nahi hota #}
+        <form method="post" action="{{ url_for('admin.delete_user', id=u._id, q=q, role=role) }}" class="d-inline"
+              onsubmit="return confirm('Delete this user and ALL their data (profile, resumes, applications, jobs)?');">
+          <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Delete</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" class="text-center text-muted py-4"><i class="bi bi-inbox fs-3 d-block mb-1"></i>No users found.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

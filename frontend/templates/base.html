@@ -23,15 +23,26 @@
     <div class="collapse navbar-collapse" id="mainNav">
       <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
         {% block nav %}
-        {% if session.role %}
-        <a class="nav-link {% if request.endpoint and request.endpoint.endswith('.dashboard') %}active{% endif %}"
-           href="{{ url_for(session.role + '.dashboard') }}"><i class="bi bi-grid-1x2-fill me-1"></i> Dashboard</a>
-        {% if session.role == 'seeker' %}
-        <a class="nav-link {% if request.endpoint == 'jobs.browse' %}active{% endif %}" href="{{ url_for('jobs.browse') }}"><i class="bi bi-search me-1"></i> Jobs</a>
-        <a class="nav-link {% if request.endpoint == 'seeker.recommended' %}active{% endif %}" href="{{ url_for('seeker.recommended') }}"><i class="bi bi-stars me-1"></i> Recommended</a>
-        {% elif session.role == 'recruiter' %}
-        <a class="nav-link {% if request.endpoint == 'recruiter.my_jobs' %}active{% endif %}" href="{{ url_for('recruiter.my_jobs') }}"><i class="bi bi-briefcase me-1"></i> My Jobs</a>
+        {# Day 9: navbar by role. Har link ek (endpoint, label, icon) hai; active = current page #}
+        {% set role = session.get('role') %}
+        {% if role == 'seeker' %}
+          {% set links = [('seeker.dashboard', 'Dashboard', 'grid-1x2-fill'), ('jobs.browse', 'Jobs', 'search'),
+                          ('seeker.recommended', 'Recommended', 'stars'), ('seeker.my_applications', 'Applications', 'file-earmark-text'),
+                          ('seeker.resume', 'Resume', 'cloud-upload'), ('seeker.profile', 'Profile', 'person-badge')] %}
+        {% elif role == 'recruiter' %}
+          {% set links = [('recruiter.dashboard', 'Dashboard', 'grid-1x2-fill'), ('recruiter.new_job', 'Post Job', 'plus-circle'),
+                          ('recruiter.my_jobs', 'My Jobs', 'briefcase'), ('recruiter.company', 'Company', 'building')] %}
+        {% elif role == 'admin' %}
+          {% set links = [('admin.dashboard', 'Dashboard', 'grid-1x2-fill'), ('admin.manage_users', 'Users', 'people'),
+                          ('admin.manage_recruiters', 'Recruiters', 'building'), ('admin.manage_jobs', 'Jobs', 'briefcase'),
+                          ('admin.manage_applications', 'Applications', 'file-earmark-text')] %}
+        {% else %}
+          {% set links = [('index', 'Home', 'house-door')] %}
         {% endif %}
+        {% for ep, label, icon in links %}
+        <a class="nav-link {% if request.endpoint == ep %}active{% endif %}" href="{{ url_for(ep) }}"><i class="bi bi-{{ icon }} me-1"></i> {{ label }}</a>
+        {% endfor %}
+        {% if role %}
         <div class="user-chip d-flex align-items-center gap-2 my-2 my-lg-0">
           <span class="avatar">{{ session.name[:1] | upper }}</span>
           <span class="d-flex flex-column lh-sm">
@@ -63,7 +74,10 @@
       <span class="footer-divider"></span>
       <span><i class="bi bi-mortarboard-fill me-1"></i> MCA Project · Greater Noida</span>
     </div>
-    <div class="small">AI Job Portal &copy; 2026 · Resume matching with NLP + TF-IDF</div>
+    <div class="small text-center text-md-end">
+      AI Job Portal &copy; 2026 · Resume matching with NLP + TF-IDF<br>
+      <span class="footer-team"><i class="bi bi-people-fill me-1"></i>MCA Major Project · Flask · MongoDB · scikit-learn</span>
+    </div>
   </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

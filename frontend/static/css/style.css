@@ -168,3 +168,36 @@ body {
 
 /* Day 8: dashboard "Top matches / Top candidates" card */
 .top-card { border: 1px solid #e5e7eb; border-left: 4px solid #6366f1; border-radius: 14px; }
+
+/* ---------- Day 9: polish ---------- */
+
+/* Navbar: 7 links + avatar fit on one line at lg (icons hidden, labels never wrap) */
+.app-navbar .nav-link, .btn-nav-outline, .btn-nav-light { white-space: nowrap; }
+@media (min-width: 992px) and (max-width: 1199px) {
+  .app-navbar .nav-link { padding: 0.4rem 0.55rem !important; font-size: 0.9rem; }
+  .app-navbar .nav-link i, .btn-nav-outline i { display: none; }
+  .app-navbar .user-name { display: none; }
+}
+
+/* Dashboard quick-link cards: hover lift + coloured icon */
+.card { border: 1px solid #e5e7eb; border-radius: 14px; }
+.card.quick-card { transition: transform .15s, box-shadow .15s; }
+.card.quick-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(17, 24, 39, 0.08); }
+.quick-ic {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(79, 70, 229, 0.1); color: var(--brand-1); font-size: 1.3rem; margin-bottom: 0.6rem;
+}
+
+/* Stat cards that are links (admin dashboard) */
+.stat-card { position: relative; }
+.stat-link { color: inherit; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+.stat-link:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15); color: inherit; }
+.stat-ic { position: absolute; top: 0.9rem; right: 1rem; font-size: 1.4rem; color: #c7d2fe; }
+
+/* Tables: lighter header, badges a bit bigger */
+.table thead th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.4px; color: #6b7280; border-bottom-width: 1px; }
+.table .badge { font-size: 0.78rem; font-weight: 500; }
+
+/* Footer second line */
+.footer-team { color: rgba(255, 255, 255, 0.55); font-size: 0.8rem; }

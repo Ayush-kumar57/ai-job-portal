@@ -25,11 +25,12 @@
       </p>
       {% if r %}
       <h6 class="mt-3">Resume</h6>
-      <p class="mb-0">
+      <p class="mb-2">
         <i class="bi bi-file-earmark-{{ 'pdf text-danger' if r.file_type == 'pdf' else 'word text-primary' }} me-1"></i>{{ r.file_name }}
         <small class="text-muted">&middot; {{ r.uploaded_at.strftime('%d %b %Y') }}</small>
       </p>
-      <small class="text-muted">Download for recruiters comes on Day 9.</small>
+      <a class="btn btn-sm btn-primary" href="{{ url_for('recruiter.candidate_download', seeker_id=user._id) }}">
+        <i class="bi bi-download me-1"></i> Download resume</a>
       {% endif %}
     </div>
   </div>

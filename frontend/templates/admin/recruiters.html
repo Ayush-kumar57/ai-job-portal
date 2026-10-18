@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Manage Recruiters{% endblock %}
+{% block content %}
+<div class="page-card">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h2 class="page-title mb-0"><i class="bi bi-building me-2"></i>Manage Recruiters</h2>
+    <span class="fs-5"><strong>{{ rows | length }}</strong> <span class="text-muted">compan{{ 'y' if rows | length == 1 else 'ies' }}</span></span>
+  </div>
+  <p class="text-muted mb-0">Company profiles with their recruiter and job counts. Delete a recruiter from <a href="{{ url_for('admin.manage_users', role='recruiter') }}">Manage Users</a>.</p>
+
+  <div class="table-responsive mt-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>#</th><th>Company</th><th>Recruiter</th><th>Email</th><th>Location</th><th class="text-center">Jobs posted</th><th class="text-center">Open</th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+    <tr>
+      <td class="text-muted">{{ loop.index }}</td>
+      <td class="fw-semibold">{{ r.company or '-' }}
+        {% if r.website %}<a class="small ms-1" href="{{ r.website }}" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i></a>{% endif %}</td>
+      <td>{{ r.name or '(deleted user)' }}</td>
+      <td>{{ r.email or '-' }}</td>
+      <td>{{ r.location or '-' }}</td>
+      <td class="text-center"><a class="badge rounded-pill bg-primary text-decoration-none" href="{{ url_for('admin.manage_jobs') }}">{{ r.jobs }}</a></td>
+      <td class="text-center"><span class="badge rounded-pill bg-success">{{ r.open }}</span></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="text-center text-muted py-4"><i class="bi bi-inbox fs-3 d-block mb-1"></i>No company profiles yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  {% if without_profile %}
+  <div class="alert alert-light border mt-2 mb-0">
+    <i class="bi bi-info-circle me-1"></i>
+    <strong>{{ without_profile | length }}</strong> recruiter account(s) have not filled a company profile yet:
+    {% for u in without_profile %}<span class="badge bg-light text-dark border ms-1">{{ u.name }} &lt;{{ u.email }}&gt;</span>{% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

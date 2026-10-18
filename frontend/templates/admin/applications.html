@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Manage Applications{% endblock %}
+{% from '_macros.html' import score_cell, status_badge %}
+{% block content %}
+<div class="page-card">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h2 class="page-title mb-0"><i class="bi bi-file-earmark-text me-2"></i>Manage Applications</h2>
+    <div class="btn-group">
+      <a class="btn btn-sm {{ 'btn-primary' if not status else 'btn-outline-primary' }}" href="{{ url_for('admin.manage_applications') }}">All</a>
+      {% for st in ['applied', 'shortlisted', 'rejected'] %}
+      <a class="btn btn-sm {{ 'btn-primary' if status == st else 'btn-outline-primary' }}" href="{{ url_for('admin.manage_applications', status=st) }}">{{ st | capitalize }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  <p class="text-muted mt-2 mb-0">{{ apps | length }} application(s), newest first.</p>
+
+  <div class="table-responsive mt-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>#</th><th>Job</th><th>Seeker</th><th>Score</th><th>Status</th><th>Applied on</th><th class="text-end">Action</th></tr></thead>
+    <tbody>
+    {% for a in apps %}
+    <tr>
+      <td class="text-muted">{{ loop.index }}</td>
+      <td class="fw-semibold">{% if a.job.title %}{{ a.job.title }}<br><small class="text-muted fw-normal">{{ a.job.company_name }}</small>
+        {% else %}<span class="text-muted">(job removed)</span>{% endif %}</td>
+      <td>{% if a.user.name %}{{ a.user.name }}<br><small class="text-muted">{{ a.user.email }}</small>
+        {% else %}<span class="text-muted">(deleted user)</span>{% endif %}</td>
+      <td>{{ score_cell(a.match_score) }}</td>
+      <td>{{ status_badge(a.status) }}</td>
+      <td>{{ a.applied_at.strftime('%d %b %Y') }}</td>
+      <td class="text-end">
+        <form method="post" action="{{ url_for('admin.delete_application', id=a._id, status=status) }}" class="d-inline"
+              onsubmit="return confirm('Delete this application?');">
+          <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="text-center text-muted py-4"><i class="bi bi-inbox fs-3 d-block mb-1"></i>No {{ status }} applications.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,28 +1,52 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Admin Dashboard{% endblock %}
+{% from '_macros.html' import score_cell, role_badge, status_badge %}
 {% block content %}
 <h2 class="mb-1">Welcome, {{ session.name }}</h2>
-<p class="text-muted mb-4">Admin dashboard</p>
-<div class="row g-3">
-  <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">Users</h5>
-    <p class="card-text text-muted">Manage all users</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
-  </div></div></div>
-  <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">Recruiters</h5>
-    <p class="card-text text-muted">Manage recruiters</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
-  </div></div></div>
-  <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">Jobs</h5>
-    <p class="card-text text-muted">Manage all jobs</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
-  </div></div></div>
-  <div class="col-md"><div class="card h-100"><div class="card-body">
-    <h5 class="card-title">Applications</h5>
-    <p class="card-text text-muted">Manage all applications</p>
-    <a href="#" class="btn btn-outline-primary btn-sm">Open</a>
-  </div></div></div>
+<p class="text-muted mb-4">Admin dashboard &middot; counts come live from MongoDB</p>
+
+{# Day 9: 5 stat cards, har card apne manage page pe le jaata hai #}
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-4 col-xl"><a class="stat-card stat-link d-block" href="{{ url_for('admin.manage_users') }}">
+    <i class="bi bi-people stat-ic"></i><div class="stat-num">{{ s.users }}</div><div class="stat-label">Users</div></a></div>
+  <div class="col-6 col-md-4 col-xl"><a class="stat-card stat-link d-block" href="{{ url_for('admin.manage_users', role='seeker') }}">
+    <i class="bi bi-person-badge stat-ic"></i><div class="stat-num">{{ s.seekers }}</div><div class="stat-label">Job seekers</div></a></div>
+  <div class="col-6 col-md-4 col-xl"><a class="stat-card stat-link d-block" href="{{ url_for('admin.manage_recruiters') }}">
+    <i class="bi bi-building stat-ic"></i><div class="stat-num">{{ s.recruiters }}</div><div class="stat-label">Recruiters</div></a></div>
+  <div class="col-6 col-md-6 col-xl"><a class="stat-card stat-link d-block" href="{{ url_for('admin.manage_jobs') }}">
+    <i class="bi bi-briefcase stat-ic"></i><div class="stat-num">{{ s.jobs }}</div><div class="stat-label">Jobs</div></a></div>
+  <div class="col-12 col-md-6 col-xl"><a class="stat-card stat-link d-block" href="{{ url_for('admin.manage_applications') }}">
+    <i class="bi bi-file-earmark-text stat-ic"></i><div class="stat-num">{{ s.applications }}</div><div class="stat-label">Applications</div></a></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="page-card h-100">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0"><i class="bi bi-person-plus me-1"></i> Newest users</h5>
+        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.manage_users') }}">Manage <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <table class="table table-sm align-middle mb-0">
+        {% for u in latest_users %}
+        <tr><td class="fw-semibold">{{ u.name }}</td><td class="text-muted small">{{ u.email }}</td>
+          <td>{{ role_badge(u.role) }}</td><td class="text-muted small text-end">{{ u.created_at.strftime('%d %b') }}</td></tr>
+        {% else %}<tr><td class="text-muted">No users yet.</td></tr>{% endfor %}
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="page-card h-100">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0"><i class="bi bi-clock-history me-1"></i> Latest applications</h5>
+        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.manage_applications') }}">Manage <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <table class="table table-sm align-middle mb-0">
+        {% for a in latest_apps %}
+        <tr><td class="fw-semibold">{{ a.user.name or '(deleted user)' }}</td><td class="text-muted small">{{ a.job.title or '(job removed)' }}</td>
+          <td>{{ score_cell(a.match_score) }}</td><td class="text-end">{{ status_badge(a.status) }}</td></tr>
+        {% else %}<tr><td class="text-muted">No applications yet.</td></tr>{% endfor %}
+      </table>
+    </div>
+  </div>
 </div>
 {% endblock %}

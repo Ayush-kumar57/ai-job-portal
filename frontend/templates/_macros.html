@@ -18,3 +18,15 @@
   {%- set s = score or 0 -%}
   <span class="badge rounded-pill bg-{{ 'success' if s >= 70 else ('warning text-dark' if s >= 40 else 'secondary') }}">{{ s }}%</span>
 {% endmacro %}
+
+{# Day 9: role badge (admin pages) - seeker blue, recruiter cyan, admin dark #}
+{% macro role_badge(role) %}
+  {%- set c = {'seeker': 'primary', 'recruiter': 'info text-dark', 'admin': 'dark'} -%}
+  <span class="badge rounded-pill bg-{{ c.get(role, 'secondary') }}">{{ role }}</span>
+{% endmacro %}
+
+{# Day 9: application status badge - one place for applied/shortlisted/rejected colours #}
+{% macro status_badge(status) %}
+  {%- set c = {'applied': 'primary', 'shortlisted': 'success', 'rejected': 'danger'} -%}
+  <span class="badge rounded-pill bg-{{ c.get(status, 'secondary') }}">{{ status }}</span>
+{% endmacro %}

@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+import os
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, send_file
 from bson import ObjectId
 from datetime import datetime
 from db import recruiters, jobs, applications, users, job_seekers, resumes
@@ -152,17 +153,38 @@ def set_status(id):
     return redirect(url_for('recruiter.my_jobs'))
 
 
-@recruiter_bp.route('/candidates/<seeker_id>')
-@role_required('recruiter')
-def candidate(seeker_id):
-    # Day 5: jinhone recruiter ki kisi job pe apply kiya. Day 8: ya jinke paas resume hai
-    # (recommended list mein aate hain, isliye unka profile bhi khulna chahiye)
+def visible_candidate(seeker_id):
+    """Kya ye seeker is recruiter ko dikh sakta hai? (Day 5: apne job ka applicant, Day 8: ya resume wala)
+    Returns (user, profile, resume) ya (None, None, None)."""
     my_job_ids = [str(j['_id']) for j in jobs.find({'recruiter_id': my_id()}, {'_id': 1})]
     applied = applications.find_one({'seeker_id': seeker_id, 'job_id': {'$in': my_job_ids}})
     user = users.find_one({'_id': to_oid(seeker_id), 'role': 'seeker'})
     p = job_seekers.find_one({'user_id': seeker_id}) or {}
     if not user or not (applied or p.get('resume_id')):
+        return None, None, None
+    r = resumes.find_one({'_id': to_oid(p['resume_id'])}) if p.get('resume_id') else None
+    return user, p, r
+
+
+@recruiter_bp.route('/candidates/<seeker_id>')
+@role_required('recruiter')
+def candidate(seeker_id):
+    user, p, r = visible_candidate(seeker_id)
+    if not user:
         flash('Candidate not found', 'danger')
         return redirect(url_for('recruiter.my_jobs'))
-    r = resumes.find_one({'_id': to_oid(p['resume_id'])}) if p.get('resume_id') else None
     return render_template('recruiter/candidate.html', user=user, p=p, r=r)
+
+
+@recruiter_bp.route('/candidates/<seeker_id>/download')
+@role_required('recruiter')
+def candidate_download(seeker_id):
+    # Day 9: candidate ka resume file download. Wahi visibility rule jo candidate page pe hai.
+    user, p, r = visible_candidate(seeker_id)
+    if not user:
+        flash('Candidate not found', 'danger')
+        return redirect(url_for('recruiter.my_jobs'))
+    if not r or not os.path.exists(r['file_path']):
+        flash('This candidate has no resume file', 'warning')
+        return redirect(url_for('recruiter.candidate', seeker_id=seeker_id))
+    return send_file(os.path.abspath(r['file_path']), as_attachment=True, download_name=r['file_name'])
