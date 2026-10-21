@@ -6,8 +6,13 @@ __pycache__/
 *.pyc
 
 # Upload hue resumes (personal data) - sirf folder rakhenge
+uploads/*
+!uploads/resumes/
 uploads/resumes/*
 !uploads/resumes/.gitkeep
+
+# pytest cache
+.pytest_cache/
 
 # Logs / editor
 *.log
